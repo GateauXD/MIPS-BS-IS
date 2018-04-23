@@ -5,8 +5,9 @@ sorted_list: .space 100
 
 str0: .asciiz "Enter size of list (between 1 and 25): "
 str1: .asciiz "Enter one list element: \n"
-str2: .asciiz "Content of list: "
+str2: .asciiz "Content of original list: "
 str3: .asciiz "Enter a key to search for: "
+str4: .asciiz "Content of sorted list: "
 strYes: .asciiz "Key found!"
 strNo: .asciiz "Key not found!"
 
@@ -27,7 +28,7 @@ main:
 	li $v0, 4 
 	la $a0, str0 
 	syscall 
-	li $v0, 5	#Read size of list from user
+	li $v0, 5	#read size of list from user
 	syscall
 	move $s0, $v0
 	move $t0, $0
@@ -38,23 +39,25 @@ loop_in:
 	syscall 
 	sll $t1, $t0, 2
 	add $t1, $t1, $s1
-	li $v0, 5	#Read elements from user
+	li $v0, 5	#read elements from user
 	syscall
 	sw $v0, 0($t1)
 	addi $t0, $t0, 1
 	bne $t0, $s0, loop_in
-	
-	li $v0, 4 
-	la $a0, str2 
-	syscall 
 	move $a0, $s1
 	move $a1, $s0
-	jal printList	#Call print original list
 	
 	jal inSort	#Call inSort to perform insertion sort in original list
+	
 	sw $v0, 4($sp)
 	li $v0, 4 
 	la $a0, str2 
+	syscall 
+	la $a0, original_list
+	move $a1, $s0
+	jal printList	#Print original list
+	li $v0, 4 
+	la $a0, str4 
 	syscall 
 	lw $a0, 4($sp)
 	jal printList	#Print sorted list
@@ -62,11 +65,11 @@ loop_in:
 	li $v0, 4 
 	la $a0, str3 
 	syscall 
-	li $v0, 5	#Read search key from user
+	li $v0, 5	#read search key from user
 	syscall
-	move $a2, $v0
+	move $a3, $v0
 	lw $a0, 4($sp)
-	jal bSearch	#Call bSearch to perform binary search
+	jal bSearch	#call bSearch to perform binary search
 	
 	beq $v0, $0, notFound
 	li $v0, 4 
