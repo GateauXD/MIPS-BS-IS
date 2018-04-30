@@ -122,6 +122,16 @@ break:
 #You may use the pre-defined sorted_list to store the result
 inSort:
 	#Your implementation of inSort here
+	addi $t1, $t1, 1 # i = 1
+	
+forLoop:
+	bge $t2, $a1, forEnd
+	move $t3, $t2
+		
+nestedWhile:
+	
+	
+		
 	
 	
 	jr $ra
