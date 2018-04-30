@@ -139,29 +139,28 @@ bSearch:
 	#a0 is the sorted list
 	#a3 is the value being searched for
 	#a1 is the size
-	
 	addi $sp, $sp, -4
 	sw $ra, 0($sp) #Store the return addresss
 	
-	bne $s3, $zero, SkipAddressChange
-	addi $t0, $zero, 4 #Get a number 4
-	mul $t0, $t0, $a1 #Mul the size * 4
-	add $a1, $a0, $t0 #Add a1 + (size * 4)
-	addi $s3, $s0, 1 #Break the condition
+	bne $t3, $zero, SkipIni
+	add $s0, $zero, $zero #Is the Lo(Start) of the array
+	addi $t3, $zero, 1
 	
-	SkipAddressChange:
-	add $t0, $a0, $a1 #Hi + Lo 
-	sra  $t0, $t0, 1  #Getting the middle (Hi + Low)/2
-	lw $t1, ($t0) #The value at the middle
+	SkipIni:
+	add $t1, $a1, $s0 #Lo + Hi
+	sra $t0, $t0, 1 #Lo + Hi /2
+	mul $t0, $t0, $t1 #Incrment * 4
+	add $t0, $t0, $a0
+	lw $t2, 0($t0) 
 
 	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
 	
-	beq $t1, $a3, foundNumber #If the middle number is equal to the key value
+	beq $t2, $a3, foundNumber #If the middle number is equal to the key value
 	
-	bgt $t1, $a3, binary_lower_half # middle < key. Check lower half move Hi
+	bgt $t2, $a3, binary_lower_half # middle < key. Check lower half move Hi
 	
 	binary_upper_half:
-	addi $a0, $t0, 1 #Low = Mid + 1 
+	addi $s0, $t0, 1 #Low = Mid + 1 
 	j bSearch #Recursively call bsearch on the upper half
 	
 	binary_lower_half:
