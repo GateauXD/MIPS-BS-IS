@@ -1,9 +1,8 @@
-Function that takes 4 arguments
+Function that takes 3 arguments
 
 -Thing wanting to be found the number
 -The array of sorted elements
--"First" element
--"Last" element
+-The Size of the Array
 
 Returning
 -Return Address
