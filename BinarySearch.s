@@ -172,23 +172,24 @@ bSearch:
 	add $a1, $a0, $t0 #Add a1 + (size * 4)
 	addi $s3, $s0, 1 #Break the condition
 	
+	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
+	
 	SkipAddressChange:
+	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
 	add $t0, $a0, $a1 #Hi + Lo 
 	sra  $t0, $t0, 1  #Getting the middle (Hi + Low)/2
 	lw $t1, ($t0) #The value at the middle
-
-	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
 	
 	beq $t1, $a3, foundNumber #If the middle number is equal to the key value
 	
 	bgt $t1, $a3, binary_lower_half # middle < key. Check lower half move Hi
 	
 	binary_upper_half:
-	addi $a0, $t0, 1 #Low = Mid + 1 
+	addi $a0, $t0, 4 #Low = Mid + 1 
 	j bSearch #Recursively call bsearch on the upper half
 	
 	binary_lower_half:
-	addi $a1, $t0, -1 #High = Mid - 1
+	addi $a1, $t0, -4 #High = Mid - 1
 	j bSearch #Recursively call bsearch on the lower half
 	
 	foundNumber:
