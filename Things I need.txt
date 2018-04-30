@@ -1,0 +1,25 @@
+Function that takes 4 arguments
+
+-Thing wanting to be found the number
+-The array of sorted elements
+-"First" element
+-"Last" element
+
+Returning
+-Return Address
+-Eveuntally the value 1 or 0 for found or not found
+
+Algorithm
+-Check if First > Last and if so return 0;
+-Will need a variable to store the middle which is the pivot of the algorithm
+-Checking if the middle is the value x
+-else check if x is larger than the value at middle then
+	-If so recursively call binary search again on the left side
+-else if x is smaller than the value
+	-recursively call binary search on the right side
+
+MIPS:
+
+#a0 is the sorted list
+#a3 is the value being searched for
+#a1 is the size
