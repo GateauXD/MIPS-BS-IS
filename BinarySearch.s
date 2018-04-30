@@ -142,7 +142,40 @@ nestedWhile:
 #It will return a 1 if the key is found, or a 0 otherwise.
 #Note: you MUST NOT use iterative approach in this function.
 bSearch:
-	#Your implementation of bSearch here
+	#a0 is the sorted list
+	#a3 is the value being searched for
+	#a1 is the size
 	
+	addi $sp, $sp, -4
+	sw $ra, 0($sp) #Store the return addresss
+	
+	add $s1, $a0, $a1 #Hi + Lo 
+	srl  $t0, $s1, 1  #Getting the middle (Hi + Low)/2
+	lw $t1, 0($t0) #The value at the middle
+
+	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
+	
+	beq $t1, $a3, foundNumber #If the middle number is equal to the key value
+	
+	bgt $t1, $a3, binary_lower_half # middle < key. Check lower half move Hi
+	
+	binary_upper_half:
+	addi $a0, $t0, 1 #Low = Mid + 1 
+	j bSearch #Recursively call bsearch on the upper half
+	
+	binary_lower_half:
+	addi $a1, $t0, -1 #High = Mid - 1
+	j bSearch #Recursively call bsearch on the lower half
+	
+	foundNumber:
+	addi $v0, $zero, 1 #Retuns 1
+	j binaryReturn
+	
+	setVtoZero:
+	add $v0, $zero, $zero #Returns 0
+	
+	binaryReturn:
+	sw $ra, 0($sp)
+	addi $sp, $sp, 4 #Clearing the Stack
 	jr $ra
 	
