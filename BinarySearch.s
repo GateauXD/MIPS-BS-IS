@@ -47,7 +47,7 @@ loop_in:
 	move $a0, $s1
 	move $a1, $s0
 	
-	#jal inSort	#Call inSort to perform insertion sort in original list
+	jal inSort	#Call inSort to perform insertion sort in original list
 	
 	sw $v0, 4($sp)
 	li $v0, 4 
@@ -91,28 +91,6 @@ end:
 #printList takes in a list and its size as arguments. 
 #It prints all the elements in one line.
 printList:
-	#Your implementation of printList here	
-	move $t1, $a0 # A[0]
-	li $s0, 0 # i = 0 
-	
-forLoop:
-	slt $t0, $s0, $a1  # checking i<n and setting $t1 = 0 if false 
-	beq $t0, $zero, break # i is bigger than n so we break out of the loop
-	
-	sw $a0, 0($t1) # $a0 = $t1
-	li $v0, 1
-	syscall
-	
-	li $a0, 32 # space in ASCII
-	syscall
-	
-	addi $t1, $t1, 4 # increment a0 by 4 to get to next element 
-	addi $s0, $s0, 1 # i += 1
-	j forLoop 
-	
-break:
-	li $v0, 4
-	la $a0, original_list 	
 	jr $ra
 	
 	
@@ -152,7 +130,7 @@ whileEnd:
 forEnd:
 	la $v0, ($a0)
 	jr $ra 	
-	
+
 #bSearch takes in a list, its size, and a search key as arguments.
 #It performs binary search RECURSIVELY to look for the search key.
 #It will return a 1 if the key is found, or a 0 otherwise.
@@ -165,9 +143,16 @@ bSearch:
 	addi $sp, $sp, -4
 	sw $ra, 0($sp) #Store the return addresss
 	
-	add $s1, $a0, $a1 #Hi + Lo 
-	srl  $t0, $s1, 1  #Getting the middle (Hi + Low)/2
-	lw $t1, 0($t0) #The value at the middle
+	bne $s3, $zero, SkipAddressChange
+	addi $t0, $zero, 4 #Get a number 4
+	mul $t0, $t0, $a1 #Mul the size * 4
+	add $a1, $a0, $t0 #Add a1 + (size * 4)
+	addi $s3, $s0, 1 #Break the condition
+	
+	SkipAddressChange:
+	add $t0, $a0, $a1 #Hi + Lo 
+	sra  $t0, $t0, 1  #Getting the middle (Hi + Low)/2
+	lw $t1, ($t0) #The value at the middle
 
 	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
 	
@@ -194,4 +179,3 @@ bSearch:
 	sw $ra, 0($sp)
 	addi $sp, $sp, 4 #Clearing the Stack
 	jr $ra
-	
