@@ -112,7 +112,6 @@ forLoop:
 	
 break:
 	li $v0, 4
-	la $a0, str1
 	la $a0, original_list 	
 	jr $ra
 	
