@@ -91,8 +91,30 @@ end:
 #printList takes in a list and its size as arguments. 
 #It prints all the elements in one line.
 printList:
-	jr $ra
+	#Your implementation of printList here	
+	move $t1, $a0 # A[0]
+	li $s0, 0 # i = 0 
 	
+forLoop:
+	slt $t0, $s0, $a1  # checking i<n and setting $t1 = 0 if false 
+	beq $t0, $zero, break # i is bigger than n so we break out of the loop
+	
+	lw $a0, 0($t1) # $a0 = $t1
+	li $v0, 1
+	syscall
+	
+	li $a0, 32 # space in ASCII
+	li $v0, 11
+	syscall
+	
+	addi $t1, $t1, 4 # increment a0 by 4 to get to next element 
+	addi $s0, $s0, 1 # i += 1
+	j forLoop 
+	
+break:
+	li $v0, 4
+	la $a0, original_list 	
+	jr $ra
 	
 #inSort takes in a list and it size as arguments. 
 #It performs INSERTION sort in ascending order and returns a new sorted list
