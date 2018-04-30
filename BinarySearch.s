@@ -47,7 +47,7 @@ loop_in:
 	move $a0, $s1
 	move $a1, $s0
 	
-	jal inSort	#Call inSort to perform insertion sort in original list
+	#jal inSort	#Call inSort to perform insertion sort in original list
 	
 	sw $v0, 4($sp)
 	li $v0, 4 
@@ -92,7 +92,28 @@ end:
 #It prints all the elements in one line.
 printList:
 	#Your implementation of printList here	
-
+	move $t1, $a0 # A[0]
+	li $s0, 0 # i = 0 
+	
+forLoop:
+	slt $t0, $s0, $a1  # checking i<n and setting $t1 = 0 if false 
+	beq $t0, $zero, break # i is bigger than n so we break out of the loop
+	
+	sw $a0, 0($t1) # $a0 = $t1
+	li $v0, 1
+	syscall
+	
+	li $a0, 32 # space in ASCII
+	syscall
+	
+	addi $t1, $t1, 4 # increment a0 by 4 to get to next element 
+	addi $s0, $s0, 1 # i += 1
+	j forLoop 
+	
+break:
+	li $v0, 4
+	la $a0, str1
+	la $a0, original_list 	
 	jr $ra
 	
 	
@@ -101,6 +122,7 @@ printList:
 #You may use the pre-defined sorted_list to store the result
 inSort:
 	#Your implementation of inSort here
+	
 	
 	jr $ra
 	
