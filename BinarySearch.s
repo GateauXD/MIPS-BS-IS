@@ -123,18 +123,35 @@ inSort:
 	#Your implementation of inSort here
 	addi $t1, $t1, 1 # i = 1
 	
-forLoop:
-	bge $t2, $a1, forEnd
-	move $t3, $t2
-		
+sortLoop:	
+	bge $t2, $a1, forEnd # iterate and if i > n exit the loop
+	move $t3, $t2 # set another j = i 
+	
 nestedWhile:
-	
-	
-		
-	
-	
-	jr $ra
-	
+	mul $t5, $t3, 4 # 4 * i 
+ 	add $t0, $a0, $t5 # assigning A[4 * i]
+ 	
+ 	ble $t3, 0, whileEnd # as long as #t3 > 0 while will run
+ 	
+ 	lw $t7, 0($t0) # $t7 = A[i]
+ 	lw $t6, -4($t0)# $t6 = A[j-1]
+ 	
+ 	bge $t7, $t6, whileEnd # as long as arr[i] < arr[j-i] 
+ 	
+ 	lw $t4, 0($t0) # $t4 = A[j]
+ 	sw $t6, 0($t0) 
+ 	sw $t4, -4($t0) # $t4 = A[j-1]
+ 	
+ 	subi $t3, $t3, 1
+ 	j nestedWhile
+ 	
+whileEnd:
+	addi $t2, $t2, 1
+	j sortLoop
+
+forEnd:
+	la $v0, ($a0)
+	jr $ra 	
 	
 #bSearch takes in a list, its size, and a search key as arguments.
 #It performs binary search RECURSIVELY to look for the search key.
