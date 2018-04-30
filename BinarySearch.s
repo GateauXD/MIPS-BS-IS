@@ -145,6 +145,7 @@ bSearch:
 	
 	bne $s3, $zero, SkipAddressChange
 	addi $t0, $zero, 4 #Get a number 4
+	addi $a1, $a1, -1
 	mul $t0, $t0, $a1 #Mul the size * 4
 	add $a1, $a0, $t0 #Add a1 + (size * 4)
 	addi $s3, $s0, 1 #Break the condition
