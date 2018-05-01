@@ -91,8 +91,30 @@ end:
 #printList takes in a list and its size as arguments. 
 #It prints all the elements in one line.
 printList:
-	jr $ra
+	#Your implementation of printList here	
+	move $t1, $a0 # A[0]
+	li $s0, 0 # i = 0 
 	
+forLoop:
+	slt $t0, $s0, $a1  # checking i<n and setting $t1 = 0 if false 
+	beq $t0, $zero, break # i is bigger than n so we break out of the loop
+	
+	lw $a0, 0($t1) # $a0 = $t1
+	li $v0, 1
+	syscall
+	
+	li $a0, 32 # space in ASCII
+	li $v0, 11
+	syscall
+	
+	addi $t1, $t1, 4 # increment a0 by 4 to get to next element 
+	addi $s0, $s0, 1 # i += 1
+	j forLoop 
+	
+break:
+	li $v0, 4
+	la $a0, original_list 	
+	jr $ra
 	
 #inSort takes in a list and it size as arguments. 
 #It performs INSERTION sort in ascending order and returns a new sorted list
@@ -139,32 +161,34 @@ bSearch:
 	#a0 is the sorted list
 	#a3 is the value being searched for
 	#a1 is the size
+	
 	addi $sp, $sp, -4
 	sw $ra, 0($sp) #Store the return addresss
 	
-	bne $t3, $zero, SkipIni
+	bne $s3, $zero, SkipAddressChange
 	add $s0, $zero, $zero #Is the Lo(Start) of the array
-	addi $t3, $zero, 1
+	addi $s3, $zero, 1
 	
-	SkipIni:
-	add $t1, $a1, $s0 #Lo + Hi
-	sra $t0, $t0, 1 #Lo + Hi /2
-	mul $t0, $t0, $t1 #Incrment * 4
-	add $t0, $t0, $a0
+	SkipAddressChange:
+	bgt $s3, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
+	addi $t3, $zero, 4 #Get number 4
+	addi $a1, $a1, -1 #Size - 1
+	add $t1, $a1, $s0 #Lo + High
+	sra $t1, $t1, 1 #(Lo + High) /2 = Mid
+	mul $t3, $t3, $t1 #Mid number * 4
+	add $t0, $t3, $a0 
 	lw $t2, 0($t0) 
-
-	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
 	
 	beq $t2, $a3, foundNumber #If the middle number is equal to the key value
 	
 	bgt $t2, $a3, binary_lower_half # middle < key. Check lower half move Hi
 	
 	binary_upper_half:
-	addi $s0, $t0, 1 #Low = Mid + 1 
+	addi $a0, $t1, 4 #Low = Mid + 1 
 	j bSearch #Recursively call bsearch on the upper half
 	
 	binary_lower_half:
-	addi $a1, $t0, -1 #High = Mid - 1
+	addi $a1, $t1, -4 #High = Mid - 1
 	j bSearch #Recursively call bsearch on the lower half
 	
 	foundNumber:
