@@ -184,7 +184,7 @@ bSearch:
 	bgt $t2, $a3, binary_lower_half # middle < key. Check lower half move Hi
 	
 	binary_upper_half:
-	addi $a0, $t1, 4 #Low = Mid + 1 
+	addi $s3, $t1, 4 #Low = Mid + 1 
 	j bSearch #Recursively call bsearch on the upper half
 	
 	binary_lower_half:
