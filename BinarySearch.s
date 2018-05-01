@@ -166,30 +166,29 @@ bSearch:
 	sw $ra, 0($sp) #Store the return addresss
 	
 	bne $s3, $zero, SkipAddressChange
-	addi $t0, $zero, 4 #Get a number 4
-	addi $a1, $a1, -1
-	mul $t0, $t0, $a1 #Mul the size * 4
-	add $a1, $a0, $t0 #Add a1 + (size * 4)
-	addi $s3, $s0, 1 #Break the condition
-	
-	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
+	add $s0, $zero, $zero #Is the Lo(Start) of the array
+	addi $s3, $zero, 1
 	
 	SkipAddressChange:
-	bgt $a0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
-	add $t0, $a0, $a1 #Hi + Lo 
-	sra  $t0, $t0, 1  #Getting the middle (Hi + Low)/2
-	lw $t1, ($t0) #The value at the middle
+	bgt $s3, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
+	addi $t3, $zero, 4 #Get number 4
+	addi $a1, $a1, -1 #Size - 1
+	add $t1, $a1, $s0 #Lo + High
+	sra $t1, $t1, 1 #(Lo + High) /2 = Mid
+	mul $t3, $t3, $t1 #Mid number * 4
+	add $t0, $t3, $a0 
+	lw $t2, 0($t0) 
 	
-	beq $t1, $a3, foundNumber #If the middle number is equal to the key value
+	beq $t2, $a3, foundNumber #If the middle number is equal to the key value
 	
-	bgt $t1, $a3, binary_lower_half # middle < key. Check lower half move Hi
+	bgt $t2, $a3, binary_lower_half # middle < key. Check lower half move Hi
 	
 	binary_upper_half:
-	addi $a0, $t0, 4 #Low = Mid + 1 
+	addi $s3, $t1, 4 #Low = Mid + 1 
 	j bSearch #Recursively call bsearch on the upper half
 	
 	binary_lower_half:
-	addi $a1, $t0, -4 #High = Mid - 1
+	addi $a1, $t1, -4 #High = Mid - 1
 	j bSearch #Recursively call bsearch on the lower half
 	
 	foundNumber:
