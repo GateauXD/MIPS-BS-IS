@@ -123,6 +123,14 @@ inSort:
 	#Your implementation of inSort here
 	addi $t1, $t1, 1 # i = 1
 	
+# t9 will be copy array 	
+transferLoop:
+	bge $t2, $a1, sortLoop # iterate the size
+	la $t8, ($a1) # transfer array index
+	sw $t8, ($t9)
+	mul $t8, $t8, 4 # 4 * i next index
+	j transferLoop
+	
 sortLoop:	
 	bge $t2, $a1, forEnd # iterate and if i > n exit the loop
 	move $t3, $t2 # set another j = i 
