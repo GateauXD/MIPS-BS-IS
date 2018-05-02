@@ -122,12 +122,12 @@ break:
 inSort:
 	#Your implementation of inSort here
 	addi $t1, $t1, 1 # i = 1
-	addi $t2, $zero, 0
+	li $t2, 0 # other i for transfer
 	la $t8, original_list # transfer array index
 	la $t9, sorted_list #Get address of sorted list
 # t9 will be copy array 	
 transferLoop:
-	bge $t2, $a1, sortLoop # iterate the size
+	bge $t2, $a1, sortLoop # iterate
 	lw $t5, ($t8) #Get the data from original_list
 	sw $t5, ($t9) #Store the data from original_list to sorted_list
 	addi $t8, $t8, 4 #Move the address one over
