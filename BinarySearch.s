@@ -127,7 +127,7 @@ inSort:
 	la $t9, sorted_list #Get address of sorted list
 # t9 will be copy array 	
 transferLoop:
-	bge $t1, $a1, sortLoop # iterate
+	bgt $t1, $a1, resett # iterate
 	lw $t5, ($t8) #Get the data from original_list
 	sw $t5, ($t9) #Store the data from original_list to sorted_list
 	addi $t8, $t8, 4 #Move the address one over
@@ -135,13 +135,17 @@ transferLoop:
 	addi $t1, $t1, 1 # i++
 	j transferLoop
 	
+	
+resett:
+	la $t9, sorted_list
+
 sortLoop:	
 	bge $t2, $a1, forEnd # iterate and if i > n exit the loop
 	move $t3, $t2 # set another j = i 
 	
 nestedWhile:
 	mul $t5, $t3, 4 # 4 * i 
- 	add $t0, $a0, $t5 # assigning A[4 * i]
+ 	add $t0, $t9, $t5 # assigning A[4 * i]
  	
  	ble $t3, 0, whileEnd # as long as #t3 > 0 while will run
  	
@@ -162,7 +166,7 @@ whileEnd:
 	j sortLoop
 
 forEnd:
-	la $v0, ($a0)
+	la $v0, sorted_list
 	jr $ra 	
 
 #bSearch takes in a list, its size, and a search key as arguments.
