@@ -121,18 +121,18 @@ break:
 #You may use the pre-defined sorted_list to store the result
 inSort:
 	#Your implementation of inSort here
-	addi $t1, $t1, 1 # i = 1
+	li $t1, 1 # i = 1
 	li $t2, 0 # other i for transfer
 	la $t8, original_list # transfer array index
 	la $t9, sorted_list #Get address of sorted list
 # t9 will be copy array 	
 transferLoop:
-	bge $t2, $a1, sortLoop # iterate
+	bge $t1, $a1, sortLoop # iterate
 	lw $t5, ($t8) #Get the data from original_list
 	sw $t5, ($t9) #Store the data from original_list to sorted_list
 	addi $t8, $t8, 4 #Move the address one over
 	addi $t9, $t9, 4 #Move the address one over
-	addi $t2, $t2, 1 # i++
+	addi $t1, $t1, 1 # i++
 	j transferLoop
 	
 sortLoop:	
@@ -182,13 +182,12 @@ bSearch:
 	addi $s3, $zero, 1
 	
 	SkipAddressChange:
-	bgt $s3, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
+	bgt $s0, $a1, setVtoZero #The lower bound is greater than the upper meaning the serach is over
 	addi $t3, $zero, 4 #Get number 4
-	addi $a1, $a1, -1 #Size - 1
 	add $t1, $a1, $s0 #Lo + High
 	sra $t1, $t1, 1 #(Lo + High) /2 = Mid
 	mul $t3, $t3, $t1 #Mid number * 4
-	add $t0, $t3, $a0 
+	add $t0, $t3, $a0 #
 	lw $t2, 0($t0) 
 	
 	beq $t2, $a3, foundNumber #If the middle number is equal to the key value
@@ -196,11 +195,11 @@ bSearch:
 	bgt $t2, $a3, binary_lower_half # middle < key. Check lower half move Hi
 	
 	binary_upper_half:
-	addi $s3, $t1, 4 #Low = Mid + 1 
+	addi $s0, $t1, 1 #Low = Mid + 1 
 	j bSearch #Recursively call bsearch on the upper half
 	
 	binary_lower_half:
-	addi $a1, $t1, -4 #High = Mid - 1
+	addi $a1, $t1, -1 #High = Mid - 1
 	j bSearch #Recursively call bsearch on the lower half
 	
 	foundNumber:
